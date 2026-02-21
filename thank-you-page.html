@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Order Placed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: #F7F8F8;
+            color: #0F1111;
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            background: #232F3E;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #FFD814;
+        }
+
+        .demo-controls-title {
+            font-weight: 700;
+            color: #FFD814;
+            font-size: 12px;
+        }
+
+        .demo-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .demo-control button,
+        .demo-control select {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 3px;
+            background: #FFD814;
+            color: #0F1111;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .status-on { background: #067D62; }
+        .status-off { background: #C45500; }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 428px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #131A22;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .amazon-logo {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .menu-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Success Banner */
+        .success-banner {
+            background: linear-gradient(135deg, #067D62 0%, #05A082 100%);
+            padding: 24px 16px;
+            text-align: center;
+            color: white;
+        }
+
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            font-size: 36px;
+            color: #067D62;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .success-subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* AtD Store Banner */
+        .atd-banner {
+            background: linear-gradient(135deg, #007185 0%, #005A6B 100%);
+            padding: 20px 16px;
+            color: white;
+            border-left: 4px solid #FFD814;
+        }
+
+        .atd-banner-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .atd-banner-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .atd-banner-button {
+            display: inline-block;
+            background: #FFD814;
+            color: #0F1111;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .atd-banner-button:active {
+            background: #F7CA00;
+        }
+
+        /* Order Details */
+        .order-details {
+            padding: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #0F1111;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #565959;
+        }
+
+        .detail-value {
+            color: #0F1111;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .divider {
+            height: 1px;
+            background: #E7E7E7;
+            margin: 20px 0;
+        }
+
+        /* Delivery Info */
+        .delivery-section {
+            background: #F7F8FA;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .delivery-date {
+            font-size: 20px;
+            font-weight: 700;
+            color: #067D62;
+            margin-bottom: 4px;
+        }
+
+        .delivery-address {
+            font-size: 14px;
+            color: #565959;
+            line-height: 1.5;
+        }
+
+        /* Items Section */
+        .items-section {
+            padding: 20px 16px;
+        }
+
+        .item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: #F7F8FA;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #0F1111;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #B12704;
+        }
+
+        .item-qty {
+            font-size: 12px;
+            color: #565959;
+            margin-top: 4px;
+        }
+
+        /* Actions */
+        .actions {
+            padding: 0 16px 24px 16px;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0F1111;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .action-button:active {
+            background: #F7F8FA;
+        }
+
+        .action-button.primary {
+            background: #FFD814;
+            border-color: #FCD200;
+        }
+
+        .action-button.primary:active {
+            background: #F7CA00;
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <span class="demo-controls-title">🎮 DEMO</span>
+        <div class="demo-control">
+            <span>One-Click:</span>
+            <span id="status" class="status-badge status-on">ON</span>
+            <button onclick="toggleOneClick()">Toggle</button>
+        </div>
+        <div class="demo-control">
+            <span>State:</span>
+            <select id="state-selector" onchange="updateState()">
+                <option value="WA">WA</option>
+                <option value="CO">CO (Restricted)</option>
+                <option value="MN">MN (Restricted)</option>
+                <option value="CA">CA</option>
+            </select>
+        </div>
+        <div class="demo-control">
+            <span style="font-size: 10px; color: #AAA;">Toggle simulates incidents • CO/MN are restricted</span>
+        </div>
+    </div>
+
+    <!-- Mobile Container -->
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="amazon-logo">amazon</div>
+            <div class="menu-icon">☰</div>
+        </div>
+
+        <!-- Success Banner -->
+        <div class="success-banner">
+            <div class="checkmark">✓</div>
+            <div class="success-title">Order Placed</div>
+            <div class="success-subtitle">Thank you for your order!</div>
+        </div>
+
+        <!-- Add to Delivery Store Banner -->
+        <div class="atd-banner">
+            <div class="atd-banner-title">Add more to your delivery</div>
+            <div class="atd-banner-text">
+                Need something else? Add items to this delivery before it ships.
+            </div>
+            <button class="atd-banner-button" onclick="navigateToStore()">
+                Shop Now
+            </button>
+        </div>
+
+        <!-- Order Details -->
+        <div class="order-details">
+            <h2 class="section-title">Order Details</h2>
+            
+            <div class="detail-row">
+                <span class="detail-label">Order Number</span>
+                <span class="detail-value">114-3856492-8884252</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Order Total</span>
+                <span class="detail-value">$47.96</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Delivery Info -->
+            <div class="delivery-section">
+                <div class="delivery-date">Arriving Tomorrow, Feb 21</div>
+                <div class="delivery-address" id="delivery-address">
+                    Delivering to:<br>
+                    John Smith<br>
+                    123 Main Street<br>
+                    Seattle, WA 98109
+                </div>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="items-section">
+            <h2 class="section-title">Items in this order</h2>
+            
+            <div class="item">
+                <div class="item-image">🧴</div>
+                <div class="item-details">
+                    <div class="item-name">Tide Pods Laundry Detergent, 81 Count</div>
+                    <div class="item-price">$24.99</div>
+                    <div class="item-qty">Qty: 1</div>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-image">🧻</div>
+                <div class="item-details">
+                    <div class="item-name">Charmin Ultra Soft Toilet Paper, 24 Rolls</div>
+                    <div class="item-price">$22.97</div>
+                    <div class="item-qty">Qty: 1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="action-button primary">View Order Details</button>
+            <button class="action-button">Track Package</button>
+            <button class="action-button">Continue Shopping</button>
+        </div>
+    </div>
+
+    <script>
+        let oneClick = true;
+        let state = 'WA';
+
+        const addresses = {
+            'WA': 'John Smith<br>123 Main Street<br>Seattle, WA 98109',
+            'CO': 'John Smith<br>456 Mountain View Dr<br>Denver, CO 80202',
+            'MN': 'John Smith<br>789 Lake Street<br>Minneapolis, MN 55408',
+            'CA': 'John Smith<br>321 Palm Avenue<br>Los Angeles, CA 90001'
+        };
+
+        function toggleOneClick() {
+            oneClick = !oneClick;
+            updateUI();
+        }
+
+        function updateState() {
+            state = document.getElementById('state-selector').value;
+            updateUI();
+        }
+
+        function updateUI() {
+            const restricted = ['CO', 'MN'].includes(state);
+            
+            // Update status badge
+            document.getElementById('status').textContent = oneClick ? 'ON' : 'OFF';
+            document.getElementById('status').className = 'status-badge ' + (oneClick ? 'status-on' : 'status-off');
+            
+            // Update address
+            const addressEl = document.getElementById('delivery-address');
+            addressEl.innerHTML = `Delivering to:<br>${addresses[state]}`;
+            
+            console.log(`One-Click: ${oneClick ? 'ON' : 'OFF'}, State: ${state}, Restricted: ${restricted}`);
+        }
+
+        function navigateToStore() {
+            // Pass toggle context via URL parameters
+            const params = new URLSearchParams();
+            params.set('oneClick', oneClick ? '1' : '0');
+            params.set('state', state);
+            window.location.href = `atd-store-final.html?${params.toString()}`;
+        }
+
+        // Initialize from URL parameters if present
+        function initFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('oneClick')) {
+                oneClick = params.get('oneClick') === '1';
+            }
+            if (params.has('state')) {
+                state = params.get('state');
+                document.getElementById('state-selector').value = state;
+            }
+            updateUI();
+        }
+
+        // Initialize
+        initFromURL();
+    </script>
+</body>
+</html>

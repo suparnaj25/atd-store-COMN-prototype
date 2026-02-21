@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add to Delivery Store - Exact Replica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: #FFFFFF;
+            color: #0F1111;
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            background: #232F3E;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #FFD814;
+        }
+
+        .demo-controls-title {
+            font-weight: 700;
+            color: #FFD814;
+            font-size: 12px;
+        }
+
+        .demo-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .demo-control button,
+        .demo-control select {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 3px;
+            background: #FFD814;
+            color: #0F1111;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .status-on { background: #067D62; }
+        .status-off { background: #C45500; }
+
+        /* Container */
+        .page-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Incident Banner */
+        .incident-banner {
+            background: #FFF4E5;
+            border-left: 4px solid #F08804;
+            padding: 12px 20px;
+            display: none;
+        }
+
+        .incident-banner.show {
+            display: block;
+        }
+
+        .incident-text {
+            color: #C45500;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 20px 0 16px 0;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #007185;
+            margin-bottom: 0;
+        }
+
+        /* Delivery Info */
+        .delivery-info {
+            background: linear-gradient(90deg, #FF9900 0%, #FFB84D 100%);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .delivery-date {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .delivery-time {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        /* Categories Section */
+        .categories-wrapper {
+            background: #E3E6E6;
+            margin: 0 -20px 20px -20px;
+            padding: 16px 20px;
+        }
+
+        .categories-header {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #0F1111;
+        }
+
+        .categories-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            scroll-behavior: smooth;
+            padding-bottom: 4px;
+        }
+
+        .categories-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .categories-carousel::-webkit-scrollbar-track {
+            background: #D5D9D9;
+            border-radius: 3px;
+        }
+
+        .categories-carousel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .category-card {
+            flex: 0 0 120px;
+            background: white;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .category-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #0F1111;
+            line-height: 1.2;
+        }
+
+        /* Widget Section */
+        .widget-section {
+            margin-bottom: 32px;
+        }
+
+        .widget-header {
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #0F1111;
+        }
+
+        .widget-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            scroll-behavior: smooth;
+            padding-bottom: 4px;
+        }
+
+        .widget-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .widget-carousel::-webkit-scrollbar-track {
+            background: #F0F0F0;
+            border-radius: 3px;
+        }
+
+        .widget-carousel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        /* Product Card */
+        .product-card {
+            flex: 0 0 180px;
+            background: white;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 156px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F7F8FA;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product-image {
+            font-size: 56px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            line-height: 1.3;
+            height: 36px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 6px;
+            color: #0F1111;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 4px;
+            color: #0F1111;
+        }
+
+        .price-dollar {
+            font-size: 11px;
+            vertical-align: super;
+            margin-right: 1px;
+        }
+
+        .product-promise {
+            font-size: 12px;
+            color: #007600;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 7px 10px;
+            background: #007185;
+            border: 1px solid #005A6B;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s;
+            color: #FFFFFF;
+        }
+
+        .add-btn.blue {
+            background: #007185;
+            border-color: #005A6B;
+            color: #FFFFFF;
+        }
+
+        .add-btn.blue:hover {
+            background: #005A6B;
+        }
+
+        .add-btn.blue:active {
+            background: #004B59;
+        }
+
+        .add-btn.yellow {
+            background: #FFD814;
+            border-color: #FCD200;
+            color: #0F1111;
+        }
+
+        .add-btn.yellow:hover {
+            background: #F7CA00;
+        }
+
+        .add-btn.yellow:active {
+            background: #F0B800;
+        }
+
+        .add-btn.loading {
+            opacity: 0.8;
+            cursor: wait;
+        }
+
+        .add-btn.added {
+            background: #067D62;
+            color: white;
+            border-color: #067D62;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #E7E7E7;
+            margin: 24px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 22px;
+            }
+            
+            .widget-header {
+                font-size: 18px;
+            }
+            
+            .product-card {
+                flex: 0 0 160px;
+            }
+            
+            .category-card {
+                flex: 0 0 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <span class="demo-controls-title">🎮 DEMO</span>
+        <div class="demo-control">
+            <span>One-Click:</span>
+            <span id="status" class="status-badge status-on">ON</span>
+            <button onclick="toggleOneClick()">Toggle</button>
+        </div>
+        <div class="demo-control">
+            <span>State:</span>
+            <select id="state" onchange="updateState()">
+                <option value="WA">WA</option>
+                <option value="CO">CO (Restricted)</option>
+                <option value="MN">MN (Restricted)</option>
+                <option value="CA">CA</option>
+            </select>
+        </div>
+        <div class="demo-control">
+            <span style="font-size: 10px; color: #AAA;">Toggle simulates incidents • CO/MN are restricted</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Add to your delivery</h1>
+        </div>
+
+        <!-- Incident Banner -->
+        <div id="banner" class="incident-banner">
+            <div class="incident-text">⚠️ One-click purchase is temporarily unavailable</div>
+        </div>
+
+        <!-- Delivery Info -->
+        <div class="delivery-info">
+            <div class="delivery-date">Tomorrow, Feb 21</div>
+            <div class="delivery-time">10hr 58min to add items</div>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="categories-wrapper">
+            <h2 class="categories-header">Shop by category</h2>
+            <div class="categories-carousel" id="categories"></div>
+        </div>
+
+        <!-- Widgets -->
+        <div id="widgets"></div>
+    </div>
+
+    <script>
+        let oneClick = true;
+        let state = 'WA';
+
+        const categories = [
+            {icon: '💄', name: 'Beauty'},
+            {icon: '🧴', name: 'Personal Care'},
+            {icon: '🛒', name: 'Grocery'},
+            {icon: '💊', name: 'Health'},
+            {icon: '🏠', name: 'Household'},
+            {icon: '✏️', name: 'Office & School'},
+            {icon: '🐾', name: 'Pets'},
+            {icon: '👶', name: 'Baby'},
+            {icon: '🛋️', name: 'Home'},
+            {icon: '📱', name: 'Electronics'}
+        ];
+
+        const products = [
+            {name: 'Tide Pods Laundry Detergent', price: '24.99', icon: '🧴'},
+            {name: 'Bounty Paper Towels 12 Rolls', price: '18.49', icon: '🧻'},
+            {name: 'Charmin Ultra Soft Toilet Paper', price: '29.99', icon: '🧻'},
+            {name: 'Glad Trash Bags 80 Count', price: '16.99', icon: '🗑️'},
+            {name: 'Lysol Disinfectant Spray', price: '12.99', icon: '🧴'},
+            {name: 'Clorox Bleach 3 Pack', price: '14.49', icon: '🧴'},
+            {name: 'Swiffer WetJet Refills', price: '19.99', icon: '🧹'},
+            {name: 'Dawn Dish Soap 3 Pack', price: '11.99', icon: '🧴'},
+            {name: 'Cascade Dishwasher Pods', price: '22.49', icon: '💧'},
+            {name: 'Febreze Air Freshener', price: '9.99', icon: '💨'}
+        ];
+
+        const widgetTitles = [
+            'Frequently repurchased items',
+            'Recommended for you',
+            'Beauty essentials',
+            'Grocery favorites',
+            'Home essentials',
+            'Health & wellness',
+            'Pet supplies',
+            'Baby products',
+            'Office supplies',
+            'Electronics'
+        ];
+
+        function toggleOneClick() {
+            oneClick = !oneClick;
+            updateUI();
+        }
+
+        function updateState() {
+            state = document.getElementById('state').value;
+            updateUI();
+        }
+
+        function updateUI() {
+            const restricted = ['CO', 'MN'].includes(state);
+            const showBanner = !oneClick && !restricted;
+            
+            document.getElementById('status').textContent = oneClick ? 'ON' : 'OFF';
+            document.getElementById('status').className = 'status-badge ' + (oneClick ? 'status-on' : 'status-off');
+            document.getElementById('banner').className = 'incident-banner' + (showBanner ? ' show' : '');
+            
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const restricted = ['CO', 'MN'].includes(state);
+            const btnText = (restricted || !oneClick) ? 'Add to Cart' : 'Add to Delivery';
+            const isBlue = btnText === 'Add to Delivery';
+            
+            document.querySelectorAll('.add-btn').forEach(btn => {
+                if (!btn.classList.contains('loading') && !btn.classList.contains('added')) {
+                    btn.textContent = btnText;
+                    
+                    // Update color based on button text
+                    if (isBlue) {
+                        btn.classList.add('blue');
+                        btn.classList.remove('yellow');
+                    } else {
+                        btn.classList.add('yellow');
+                        btn.classList.remove('blue');
+                    }
+                }
+            });
+        }
+
+        function addToCart(btn, name) {
+            btn.classList.add('loading');
+            btn.textContent = 'Adding...';
+            
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                btn.classList.add('added');
+                btn.textContent = '✓ Added';
+                console.log(`Added: ${name} | Customer stays on page!`);
+                
+                setTimeout(() => {
+                    btn.classList.remove('added');
+                    updateButtons();
+                }, 2000);
+            }, 800);
+        }
+
+        // Build categories
+        const categoriesEl = document.getElementById('categories');
+        categories.forEach(cat => {
+            categoriesEl.innerHTML += `
+                <div class="category-card">
+                    <span class="category-icon">${cat.icon}</span>
+                    <div class="category-name">${cat.name}</div>
+                </div>
+            `;
+        });
+
+        // Build widgets
+        const widgetsEl = document.getElementById('widgets');
+        widgetTitles.forEach((title, idx) => {
+            let html = `
+                <div class="widget-section">
+                    <h3 class="widget-header">${title}</h3>
+                    <div class="widget-carousel">
+            `;
+            
+            products.forEach((product, pidx) => {
+                const [whole, decimal] = product.price.split('.');
+                html += `
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            <div class="product-image">${product.icon}</div>
+                        </div>
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">
+                            <span class="price-dollar">$</span>${whole}<sup>${decimal}</sup>
+                        </div>
+                        <div class="product-promise">Get it by Tomorrow, Feb 21</div>
+                        <button class="add-btn blue" onclick="addToCart(this, '${product.name}')">Add to Delivery</button>
+                    </div>
+                `;
+            });
+            
+            html += `</div></div>`;
+            if (idx < widgetTitles.length - 1) html += '<div class="divider"></div>';
+            widgetsEl.innerHTML += html;
+        });
+
+        // Initialize from URL parameters if present
+        function initFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('oneClick')) {
+                oneClick = params.get('oneClick') === '1';
+            }
+            if (params.has('state')) {
+                state = params.get('state');
+                document.getElementById('state').value = state;
+            }
+        }
+
+        // Initialize
+        initFromURL();
+        updateUI();
+    </script>
+</body>
+</html>
