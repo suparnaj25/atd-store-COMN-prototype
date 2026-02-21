@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add to Delivery Store - Meridian Design System</title>
+    <style>
+        /* Meridian Design Tokens */
+        :root {
+            --meridian-spacing-100: 4px;
+            --meridian-spacing-200: 8px;
+            --meridian-spacing-300: 12px;
+            --meridian-spacing-400: 16px;
+            --meridian-spacing-500: 24px;
+            --meridian-spacing-600: 32px;
+            
+            --meridian-color-theme-primary: #007185;
+            --meridian-color-theme-primary-hover: #005A6B;
+            --meridian-color-theme-primary-active: #004B59;
+            
+            --meridian-color-warning-bg: #FFF4E5;
+            --meridian-color-warning-border: #F08804;
+            --meridian-color-warning-text: #C45500;
+            
+            --meridian-color-success: #067D62;
+            --meridian-color-neutral-900: #0F1111;
+            --meridian-color-neutral-700: #565959;
+            --meridian-color-neutral-400: #D5D9D9;
+            --meridian-color-neutral-200: #E7E7E7;
+            --meridian-color-neutral-100: #F7F8FA;
+            
+            --meridian-button-secondary-bg: #FFD814;
+            --meridian-button-secondary-hover: #F7CA00;
+            --meridian-button-secondary-active: #F0B800;
+            --meridian-button-secondary-border: #FCD200;
+            
+            --meridian-elevation-raised: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --meridian-elevation-reveal: 0 4px 12px rgba(0, 0, 0, 0.15);
+            
+            --meridian-radius-medium: 8px;
+            --meridian-radius-small: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: #FFFFFF;
+            color: var(--meridian-color-neutral-900);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            background: #232F3E;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--meridian-button-secondary-bg);
+        }
+
+        .demo-controls-title {
+            font-weight: 700;
+            color: var(--meridian-button-secondary-bg);
+            font-size: 12px;
+        }
+
+        .demo-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .demo-control button,
+        .demo-control select {
+            padding: 4px 10px;
+            border: none;
+            border-radius: var(--meridian-radius-small);
+            background: var(--meridian-button-secondary-bg);
+            color: var(--meridian-color-neutral-900);
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .status-on { background: var(--meridian-color-success); }
+        .status-off { background: var(--meridian-color-warning-text); }
+
+        /* Container */
+        .page-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 var(--meridian-spacing-500);
+        }
+
+        /* Alert Banner - Meridian Warning Alert */
+        .incident-banner {
+            background: var(--meridian-color-warning-bg);
+            border-left: 4px solid var(--meridian-color-warning-border);
+            padding: var(--meridian-spacing-300) var(--meridian-spacing-500);
+            margin-bottom: var(--meridian-spacing-400);
+            display: none;
+            border-radius: var(--meridian-radius-small);
+        }
+
+        .incident-banner.show {
+            display: flex;
+            align-items: center;
+            gap: var(--meridian-spacing-300);
+        }
+
+        .incident-icon {
+            font-size: 24px;
+        }
+
+        .incident-text {
+            color: var(--meridian-color-warning-text);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+        }
+
+        /* Page Header - Meridian h300 */
+        .page-header {
+            padding: var(--meridian-spacing-500) 0 var(--meridian-spacing-400) 0;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 36px;
+            color: var(--meridian-color-theme-primary);
+            margin-bottom: 0;
+        }
+
+        /* Delivery Info */
+        .delivery-info {
+            background: linear-gradient(90deg, #FF9900 0%, #FFB84D 100%);
+            border-radius: var(--meridian-radius-medium);
+            padding: var(--meridian-spacing-400) var(--meridian-spacing-500);
+            margin-bottom: var(--meridian-spacing-500);
+            color: white;
+            box-shadow: var(--meridian-elevation-raised);
+        }
+
+        .delivery-date {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24px;
+            margin-bottom: var(--meridian-spacing-100);
+        }
+
+        .delivery-time {
+            font-size: 14px;
+            line-height: 20px;
+            opacity: 0.95;
+        }
+
+        /* Categories Section */
+        .categories-wrapper {
+            background: #E3E6E6;
+            margin: 0 calc(var(--meridian-spacing-500) * -1) var(--meridian-spacing-500) calc(var(--meridian-spacing-500) * -1);
+            padding: var(--meridian-spacing-400) var(--meridian-spacing-500);
+        }
+
+        .categories-header {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24px;
+            margin-bottom: var(--meridian-spacing-300);
+            color: var(--meridian-color-neutral-900);
+        }
+
+        .categories-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: var(--meridian-spacing-300);
+            scroll-behavior: smooth;
+            padding-bottom: var(--meridian-spacing-100);
+        }
+
+        .categories-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .categories-carousel::-webkit-scrollbar-track {
+            background: var(--meridian-color-neutral-400);
+            border-radius: 3px;
+        }
+
+        .categories-carousel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        /* Meridian Card */
+        .category-card {
+            flex: 0 0 120px;
+            background: white;
+            border: 1px solid var(--meridian-color-neutral-400);
+            border-radius: var(--meridian-radius-medium);
+            padding: var(--meridian-spacing-300);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--meridian-elevation-raised);
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--meridian-elevation-reveal);
+        }
+
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: var(--meridian-spacing-200);
+            display: block;
+        }
+
+        .category-name {
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            color: var(--meridian-color-neutral-900);
+        }
+
+        /* Widget Section */
+        .widget-section {
+            margin-bottom: var(--meridian-spacing-600);
+        }
+
+        .widget-header {
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 28px;
+            margin-bottom: var(--meridian-spacing-300);
+            color: var(--meridian-color-neutral-900);
+        }
+
+        .widget-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: var(--meridian-spacing-300);
+            scroll-behavior: smooth;
+            padding-bottom: var(--meridian-spacing-100);
+        }
+
+        .widget-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .widget-carousel::-webkit-scrollbar-track {
+            background: #F0F0F0;
+            border-radius: 3px;
+        }
+
+        .widget-carousel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        /* Meridian Product Card */
+        .product-card {
+            flex: 0 0 180px;
+            background: white;
+            border: 1px solid var(--meridian-color-neutral-400);
+            border-radius: var(--meridian-radius-medium);
+            padding: var(--meridian-spacing-300);
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            box-shadow: var(--meridian-elevation-raised);
+        }
+
+        .product-card:hover {
+            box-shadow: var(--meridian-elevation-reveal);
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 156px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--meridian-color-neutral-100);
+            border-radius: var(--meridian-radius-small);
+            margin-bottom: var(--meridian-spacing-200);
+        }
+
+        .product-image {
+            font-size: 56px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            line-height: 18px;
+            height: 36px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: var(--meridian-spacing-200);
+            color: var(--meridian-color-neutral-900);
+            font-weight: 400;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 20px;
+            margin-bottom: var(--meridian-spacing-100);
+            color: var(--meridian-color-neutral-900);
+        }
+
+        .price-dollar {
+            font-size: 11px;
+            vertical-align: super;
+            margin-right: 1px;
+        }
+
+        .product-promise {
+            font-size: 12px;
+            line-height: 16px;
+            color: #007600;
+            font-weight: 500;
+            margin-bottom: var(--meridian-spacing-200);
+        }
+
+        /* Meridian Buttons */
+        .add-btn {
+            width: 100%;
+            height: 40px;
+            padding: 0 var(--meridian-spacing-400);
+            border-radius: var(--meridian-radius-medium);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 20px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Meridian Primary Button (Blue - Add to Delivery) */
+        .add-btn.blue {
+            background: var(--meridian-color-theme-primary);
+            color: white;
+            border: 1px solid var(--meridian-color-theme-primary);
+        }
+
+        .add-btn.blue:hover {
+            background: var(--meridian-color-theme-primary-hover);
+        }
+
+        .add-btn.blue:active {
+            background: var(--meridian-color-theme-primary-active);
+        }
+
+        /* Meridian Secondary Button (Yellow - Add to Cart) */
+        .add-btn.yellow {
+            background: var(--meridian-button-secondary-bg);
+            color: var(--meridian-color-neutral-900);
+            border: 1px solid var(--meridian-button-secondary-border);
+        }
+
+        .add-btn.yellow:hover {
+            background: var(--meridian-button-secondary-hover);
+        }
+
+        .add-btn.yellow:active {
+            background: var(--meridian-button-secondary-active);
+        }
+
+        .add-btn.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .add-btn.added {
+            background: var(--meridian-color-success);
+            color: white;
+            border-color: var(--meridian-color-success);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--meridian-color-neutral-200);
+            margin: var(--meridian-spacing-500) 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 22px;
+            }
+            
+            .widget-header {
+                font-size: 18px;
+            }
+            
+            .product-card {
+                flex: 0 0 160px;
+            }
+            
+            .category-card {
+                flex: 0 0 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <span class="demo-controls-title">🎮 DEMO</span>
+        <div class="demo-control">
+            <span>One-Click:</span>
+            <span id="status" class="status-badge status-on">ON</span>
+            <button onclick="toggleOneClick()">Toggle</button>
+        </div>
+        <div class="demo-control">
+            <span>State:</span>
+            <select id="state" onchange="updateState()">
+                <option value="WA">WA</option>
+                <option value="CO">CO (Restricted)</option>
+                <option value="MN">MN (Restricted)</option>
+                <option value="CA">CA</option>
+            </select>
+        </div>
+        <div class="demo-control">
+            <span style="font-size: 10px; color: #AAA;">Meridian Design System • Toggle simulates incidents • CO/MN are restricted</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Add to your delivery</h1>
+        </div>
+
+        <!-- Meridian Warning Alert -->
+        <div id="banner" class="incident-banner">
+            <span class="incident-icon">⚠️</span>
+            <div class="incident-text">One-click purchase is temporarily unavailable</div>
+        </div>
+
+        <!-- Delivery Info -->
+        <div class="delivery-info">
+            <div class="delivery-date">Tomorrow, Feb 21</div>
+            <div class="delivery-time">10hr 58min to add items</div>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="categories-wrapper">
+            <h2 class="categories-header">Shop by category</h2>
+            <div class="categories-carousel" id="categories"></div>
+        </div>
+
+        <!-- Widgets -->
+        <div id="widgets"></div>
+    </div>
+
+    <script>
+        let oneClick = true;
+        let state = 'WA';
+
+        const categories = [
+            {icon: '💄', name: 'Beauty'},
+            {icon: '🧴', name: 'Personal Care'},
+            {icon: '🛒', name: 'Grocery'},
+            {icon: '💊', name: 'Health'},
+            {icon: '🏠', name: 'Household'},
+            {icon: '✏️', name: 'Office & School'},
+            {icon: '🐾', name: 'Pets'},
+            {icon: '👶', name: 'Baby'},
+            {icon: '🛋️', name: 'Home'},
+            {icon: '📱', name: 'Electronics'}
+        ];
+
+        const products = [
+            {name: 'Tide Pods Laundry Detergent', price: '24.99', icon: '🧴'},
+            {name: 'Bounty Paper Towels 12 Rolls', price: '18.49', icon: '🧻'},
+            {name: 'Charmin Ultra Soft Toilet Paper', price: '29.99', icon: '🧻'},
+            {name: 'Glad Trash Bags 80 Count', price: '16.99', icon: '🗑️'},
+            {name: 'Lysol Disinfectant Spray', price: '12.99', icon: '🧴'},
+            {name: 'Clorox Bleach 3 Pack', price: '14.49', icon: '🧴'},
+            {name: 'Swiffer WetJet Refills', price: '19.99', icon: '🧹'},
+            {name: 'Dawn Dish Soap 3 Pack', price: '11.99', icon: '🧴'},
+            {name: 'Cascade Dishwasher Pods', price: '22.49', icon: '💧'},
+            {name: 'Febreze Air Freshener', price: '9.99', icon: '💨'}
+        ];
+
+        const widgetTitles = [
+            'Frequently repurchased items',
+            'Recommended for you',
+            'Beauty essentials',
+            'Grocery favorites',
+            'Home essentials',
+            'Health & wellness',
+            'Pet supplies',
+            'Baby products',
+            'Office supplies',
+            'Electronics'
+        ];
+
+        function toggleOneClick() {
+            oneClick = !oneClick;
+            updateUI();
+        }
+
+        function updateState() {
+            state = document.getElementById('state').value;
+            updateUI();
+        }
+
+        function updateUI() {
+            const restricted = ['CO', 'MN'].includes(state);
+            const showBanner = !oneClick && !restricted;
+            
+            document.getElementById('status').textContent = oneClick ? 'ON' : 'OFF';
+            document.getElementById('status').className = 'status-badge ' + (oneClick ? 'status-on' : 'status-off');
+            document.getElementById('banner').className = 'incident-banner' + (showBanner ? ' show' : '');
+            
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const restricted = ['CO', 'MN'].includes(state);
+            const btnText = (restricted || !oneClick) ? 'Add to Cart' : 'Add to Delivery';
+            const isBlue = btnText === 'Add to Delivery';
+            
+            document.querySelectorAll('.add-btn').forEach(btn => {
+                if (!btn.classList.contains('loading') && !btn.classList.contains('added')) {
+                    btn.textContent = btnText;
+                    
+                    if (isBlue) {
+                        btn.classList.add('blue');
+                        btn.classList.remove('yellow');
+                    } else {
+                        btn.classList.add('yellow');
+                        btn.classList.remove('blue');
+                    }
+                }
+            });
+        }
+
+        function addToCart(btn, name) {
+            btn.classList.add('loading');
+            btn.textContent = 'Adding...';
+            
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                btn.classList.add('added');
+                btn.textContent = '✓ Added';
+                console.log(`Added: ${name} | Customer stays on page!`);
+                
+                setTimeout(() => {
+                    btn.classList.remove('added');
+                    updateButtons();
+                }, 2000);
+            }, 800);
+        }
+
+        // Build categories
+        const categoriesEl = document.getElementById('categories');
+        categories.forEach(cat => {
+            categoriesEl.innerHTML += `
+                <div class="category-card">
+                    <span class="category-icon">${cat.icon}</span>
+                    <div class="category-name">${cat.name}</div>
+                </div>
+            `;
+        });
+
+        // Build widgets
+        const widgetsEl = document.getElementById('widgets');
+        widgetTitles.forEach((title, idx) => {
+            let html = `
+                <div class="widget-section">
+                    <h3 class="widget-header">${title}</h3>
+                    <div class="widget-carousel">
+            `;
+            
+            products.forEach((product, pidx) => {
+                const [whole, decimal] = product.price.split('.');
+                html += `
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            <div class="product-image">${product.icon}</div>
+                        </div>
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">
+                            <span class="price-dollar">$</span>${whole}<sup>${decimal}</sup>
+                        </div>
+                        <div class="product-promise">Get it by Tomorrow, Feb 21</div>
+                        <button class="add-btn blue" onclick="addToCart(this, '${product.name}')">Add to Delivery</button>
+                    </div>
+                `;
+            });
+            
+            html += `</div></div>`;
+            if (idx < widgetTitles.length - 1) html += '<div class="divider"></div>';
+            widgetsEl.innerHTML += html;
+        });
+
+        // Initialize from URL parameters if present
+        function initFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('oneClick')) {
+                oneClick = params.get('oneClick') === '1';
+            }
+            if (params.has('state')) {
+                state = params.get('state');
+                document.getElementById('state').value = state;
+            }
+        }
+
+        initFromURL();
+        updateUI();
+    </script>
+</body>
+</html>

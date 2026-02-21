@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Order Placed - Meridian Design System</title>
+    <style>
+        /* Meridian Design Tokens */
+        :root {
+            --meridian-spacing-100: 4px;
+            --meridian-spacing-200: 8px;
+            --meridian-spacing-300: 12px;
+            --meridian-spacing-400: 16px;
+            --meridian-spacing-500: 24px;
+            --meridian-spacing-600: 32px;
+            
+            --meridian-color-theme-primary: #007185;
+            --meridian-color-theme-primary-hover: #005A6B;
+            
+            --meridian-color-success: #067D62;
+            --meridian-color-success-bg: #E8F5F2;
+            --meridian-color-neutral-900: #0F1111;
+            --meridian-color-neutral-700: #565959;
+            --meridian-color-neutral-400: #D5D9D9;
+            --meridian-color-neutral-200: #E7E7E7;
+            --meridian-color-neutral-100: #F7F8FA;
+            
+            --meridian-button-primary-bg: #FFD814;
+            --meridian-button-primary-hover: #F7CA00;
+            --meridian-button-secondary-bg: white;
+            
+            --meridian-elevation-raised: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --meridian-elevation-reveal: 0 4px 12px rgba(0, 0, 0, 0.15);
+            
+            --meridian-radius-medium: 8px;
+            --meridian-radius-small: 4px;
+            --meridian-radius-large: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--meridian-color-neutral-100);
+            color: var(--meridian-color-neutral-900);
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            background: #232F3E;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--meridian-button-primary-bg);
+        }
+
+        .demo-controls-title {
+            font-weight: 700;
+            color: var(--meridian-button-primary-bg);
+            font-size: 12px;
+        }
+
+        .demo-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .demo-control button,
+        .demo-control select {
+            padding: 4px 10px;
+            border: none;
+            border-radius: var(--meridian-radius-small);
+            background: var(--meridian-button-primary-bg);
+            color: var(--meridian-color-neutral-900);
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .status-on { background: var(--meridian-color-success); }
+        .status-off { background: #C45500; }
+
+        /* Mobile Container - Meridian Card */
+        .mobile-container {
+            max-width: 428px;
+            margin: 20px auto;
+            background: white;
+            border-radius: var(--meridian-radius-large);
+            overflow: hidden;
+            box-shadow: var(--meridian-elevation-reveal);
+        }
+
+        /* Header */
+        .header {
+            background: #131A22;
+            padding: var(--meridian-spacing-300) var(--meridian-spacing-400);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .amazon-logo {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .menu-icon {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Meridian Success Alert (Large) */
+        .success-banner {
+            background: linear-gradient(135deg, var(--meridian-color-success) 0%, #05A082 100%);
+            padding: var(--meridian-spacing-500) var(--meridian-spacing-400);
+            text-align: center;
+            color: white;
+        }
+
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--meridian-spacing-400) auto;
+            font-size: 36px;
+            color: var(--meridian-color-success);
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 32px;
+            margin-bottom: var(--meridian-spacing-200);
+        }
+
+        .success-subtitle {
+            font-size: 16px;
+            line-height: 22px;
+            opacity: 0.95;
+        }
+
+        /* AtD Store Banner - Meridian Theme Alert */
+        .atd-banner {
+            background: linear-gradient(135deg, var(--meridian-color-theme-primary) 0%, #005A6B 100%);
+            padding: var(--meridian-spacing-500) var(--meridian-spacing-400);
+            color: white;
+            border-left: 4px solid var(--meridian-button-primary-bg);
+        }
+
+        .atd-banner-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24px;
+            margin-bottom: var(--meridian-spacing-200);
+        }
+
+        .atd-banner-text {
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: var(--meridian-spacing-300);
+        }
+
+        /* Meridian Primary Button */
+        .atd-banner-button {
+            display: inline-block;
+            background: var(--meridian-button-primary-bg);
+            color: var(--meridian-color-neutral-900);
+            padding: 10px var(--meridian-spacing-500);
+            border-radius: var(--meridian-radius-medium);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 20px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .atd-banner-button:active {
+            background: var(--meridian-button-primary-hover);
+            transform: translateY(1px);
+        }
+
+        /* Order Details */
+        .order-details {
+            padding: var(--meridian-spacing-500) var(--meridian-spacing-400);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24px;
+            margin-bottom: var(--meridian-spacing-400);
+            color: var(--meridian-color-neutral-900);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--meridian-spacing-300);
+            font-size: 14px;
+            line-height: 20px;
+        }
+
+        .detail-label {
+            color: var(--meridian-color-neutral-700);
+        }
+
+        .detail-value {
+            color: var(--meridian-color-neutral-900);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--meridian-color-neutral-200);
+            margin: var(--meridian-spacing-500) 0;
+        }
+
+        /* Delivery Info - Meridian Box */
+        .delivery-section {
+            background: var(--meridian-color-neutral-100);
+            padding: var(--meridian-spacing-400);
+            border-radius: var(--meridian-radius-medium);
+            margin-bottom: var(--meridian-spacing-500);
+            border: 1px solid var(--meridian-color-neutral-400);
+        }
+
+        .delivery-date {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 26px;
+            color: var(--meridian-color-success);
+            margin-bottom: var(--meridian-spacing-100);
+        }
+
+        .delivery-address {
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--meridian-color-neutral-700);
+        }
+
+        /* Items Section */
+        .items-section {
+            padding: var(--meridian-spacing-500) var(--meridian-spacing-400);
+        }
+
+        /* Meridian Product Card */
+        .item {
+            display: flex;
+            gap: var(--meridian-spacing-300);
+            margin-bottom: var(--meridian-spacing-400);
+            padding: var(--meridian-spacing-300);
+            background: var(--meridian-color-neutral-100);
+            border-radius: var(--meridian-radius-medium);
+            border: 1px solid var(--meridian-color-neutral-400);
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: var(--meridian-radius-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 18px;
+            margin-bottom: var(--meridian-spacing-100);
+            color: var(--meridian-color-neutral-900);
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 20px;
+            color: #B12704;
+            margin-bottom: var(--meridian-spacing-100);
+        }
+
+        .item-qty {
+            font-size: 12px;
+            line-height: 16px;
+            color: var(--meridian-color-neutral-700);
+        }
+
+        /* Actions - Meridian Buttons */
+        .actions {
+            padding: 0 var(--meridian-spacing-400) var(--meridian-spacing-500) var(--meridian-spacing-400);
+        }
+
+        .action-button {
+            width: 100%;
+            height: 48px;
+            padding: 0 var(--meridian-spacing-400);
+            background: var(--meridian-button-secondary-bg);
+            border: 1px solid var(--meridian-color-neutral-400);
+            border-radius: var(--meridian-radius-medium);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            color: var(--meridian-color-neutral-900);
+            margin-bottom: var(--meridian-spacing-300);
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-button:active {
+            background: var(--meridian-color-neutral-100);
+            transform: translateY(1px);
+        }
+
+        .action-button.primary {
+            background: var(--meridian-button-primary-bg);
+            border-color: #FCD200;
+        }
+
+        .action-button.primary:active {
+            background: var(--meridian-button-primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <span class="demo-controls-title">🎮 DEMO</span>
+        <div class="demo-control">
+            <span>One-Click:</span>
+            <span id="status" class="status-badge status-on">ON</span>
+            <button onclick="toggleOneClick()">Toggle</button>
+        </div>
+        <div class="demo-control">
+            <span>State:</span>
+            <select id="state-selector" onchange="updateState()">
+                <option value="WA">WA</option>
+                <option value="CO">CO (Restricted)</option>
+                <option value="MN">MN (Restricted)</option>
+                <option value="CA">CA</option>
+            </select>
+        </div>
+        <div class="demo-control">
+            <span style="font-size: 10px; color: #AAA;">Meridian Design System • Toggle simulates incidents • CO/MN are restricted</span>
+        </div>
+    </div>
+
+    <!-- Mobile Container -->
+    <div class="mobile-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="amazon-logo">amazon</div>
+            <div class="menu-icon">☰</div>
+        </div>
+
+        <!-- Meridian Success Alert (Large) -->
+        <div class="success-banner">
+            <div class="checkmark">✓</div>
+            <div class="success-title">Order Placed</div>
+            <div class="success-subtitle">Thank you for your order!</div>
+        </div>
+
+        <!-- Meridian Theme Alert - AtD Store Banner -->
+        <div class="atd-banner">
+            <div class="atd-banner-title">Add more to your delivery</div>
+            <div class="atd-banner-text">
+                Need something else? Add items to this delivery before it ships.
+            </div>
+            <button class="atd-banner-button" onclick="navigateToStore()">
+                Shop Now
+            </button>
+        </div>
+
+        <!-- Order Details -->
+        <div class="order-details">
+            <h2 class="section-title">Order Details</h2>
+            
+            <div class="detail-row">
+                <span class="detail-label">Order Number</span>
+                <span class="detail-value">114-3856492-8884252</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Order Total</span>
+                <span class="detail-value">$47.96</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Meridian Box - Delivery Info -->
+            <div class="delivery-section">
+                <div class="delivery-date">Arriving Tomorrow, Feb 21</div>
+                <div class="delivery-address" id="delivery-address">
+                    Delivering to:<br>
+                    John Smith<br>
+                    123 Main Street<br>
+                    Seattle, WA 98109
+                </div>
+            </div>
+        </div>
+
+        <!-- Items - Meridian Cards -->
+        <div class="items-section">
+            <h2 class="section-title">Items in this order</h2>
+            
+            <div class="item">
+                <div class="item-image">🧴</div>
+                <div class="item-details">
+                    <div class="item-name">Tide Pods Laundry Detergent, 81 Count</div>
+                    <div class="item-price">$24.99</div>
+                    <div class="item-qty">Qty: 1</div>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-image">🧻</div>
+                <div class="item-details">
+                    <div class="item-name">Charmin Ultra Soft Toilet Paper, 24 Rolls</div>
+                    <div class="item-price">$22.97</div>
+                    <div class="item-qty">Qty: 1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meridian Buttons - Actions -->
+        <div class="actions">
+            <button class="action-button primary">View Order Details</button>
+            <button class="action-button">Track Package</button>
+            <button class="action-button">Continue Shopping</button>
+        </div>
+    </div>
+
+    <script>
+        let oneClick = true;
+        let state = 'WA';
+
+        const addresses = {
+            'WA': 'John Smith<br>123 Main Street<br>Seattle, WA 98109',
+            'CO': 'John Smith<br>456 Mountain View Dr<br>Denver, CO 80202',
+            'MN': 'John Smith<br>789 Lake Street<br>Minneapolis, MN 55408',
+            'CA': 'John Smith<br>321 Palm Avenue<br>Los Angeles, CA 90001'
+        };
+
+        function toggleOneClick() {
+            oneClick = !oneClick;
+            updateUI();
+        }
+
+        function updateState() {
+            state = document.getElementById('state-selector').value;
+            updateUI();
+        }
+
+        function updateUI() {
+            const restricted = ['CO', 'MN'].includes(state);
+            
+            document.getElementById('status').textContent = oneClick ? 'ON' : 'OFF';
+            document.getElementById('status').className = 'status-badge ' + (oneClick ? 'status-on' : 'status-off');
+            
+            const addressEl = document.getElementById('delivery-address');
+            addressEl.innerHTML = `Delivering to:<br>${addresses[state]}`;
+            
+            console.log(`One-Click: ${oneClick ? 'ON' : 'OFF'}, State: ${state}, Restricted: ${restricted}`);
+        }
+
+        function navigateToStore() {
+            const params = new URLSearchParams();
+            params.set('oneClick', oneClick ? '1' : '0');
+            params.set('state', state);
+            window.location.href = `atd-store-meridian.html?${params.toString()}`;
+        }
+
+        function initFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('oneClick')) {
+                oneClick = params.get('oneClick') === '1';
+            }
+            if (params.has('state')) {
+                state = params.get('state');
+                document.getElementById('state-selector').value = state;
+            }
+            updateUI();
+        }
+
+        initFromURL();
+    </script>
+</body>
+</html>
